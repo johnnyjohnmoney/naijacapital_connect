@@ -1,0 +1,183 @@
+// NaijaConnect Capital Database Schema
+// Prisma schema for FinTech investment platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User roles enumeration
+enum UserRole {
+  INVESTOR
+  BUSINESS_OWNER
+  ADMINISTRATOR
+}
+
+// Investment status enumeration
+enum InvestmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  PENDING
+}
+
+// Investment opportunity status
+enum OpportunityStatus {
+  OPEN
+  CLOSED
+  FULLY_FUNDED
+  CANCELLED
+}
+
+// Message status
+enum MessageStatus {
+  UNREAD
+  READ
+}
+
+// User account model
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(INVESTOR)
+  phone     String?
+  address   String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  investments         Investment[]
+  businesses          Business[]
+  sentMessages        Message[]           @relation("SentMessages")
+  receivedMessages    Message[]           @relation("ReceivedMessages")
+  notifications       Notification[]
+  withdrawalRequests  WithdrawalRequest[]
+
+  @@map("users")
+}
+
+// Business/Investment opportunity model
+model Business {
+  id                String            @id @default(cuid())
+  title             String
+  description       String
+  detailedPlan      String
+  targetCapital     Float
+  minimumInvestment Float
+  expectedROI       Float
+  timeline          Int               // in months
+  industry          String
+  riskLevel         String
+  status            OpportunityStatus @default(OPEN)
+  currentRaised     Float             @default(0)
+  ownerId           String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relations
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  investments Investment[]
+  reports     Report[]
+
+  @@map("businesses")
+}
+
+// Investment model
+model Investment {
+  id         String           @id @default(cuid())
+  amount     Float
+  status     InvestmentStatus @default(PENDING)
+  investorId String
+  businessId String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  // Relations
+  investor User     @relation(fields: [investorId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  returns  Return[]
+
+  @@map("investments")
+}
+
+// Investment returns/earnings model
+model Return {
+  id           String   @id @default(cuid())
+  amount       Float
+  description  String
+  investmentId String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  investment Investment @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+
+  @@map("returns")
+}
+
+// Withdrawal requests model
+model WithdrawalRequest {
+  id        String   @id @default(cuid())
+  amount    Float
+  status    String   @default("PENDING")
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("withdrawal_requests")
+}
+
+// Message model for communication
+model Message {
+  id         String        @id @default(cuid())
+  content    String
+  subject    String
+  status     MessageStatus @default(UNREAD)
+  senderId   String
+  receiverId String
+  createdAt  DateTime      @default(now())
+
+  // Relations
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+// Notification model
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  read      Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// Business progress reports
+model Report {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  businessId String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
