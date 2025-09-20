@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InvestmentManagement from "@/components/InvestmentManagement";
+import { LineChart, BarChart, PieChart, DonutChart } from "@/components/charts";
+import {
+  calculatePlatformMetrics,
+  formatCurrency,
+  formatPercentage,
+  formatLargeNumber,
+  type PlatformMetrics,
+  type MonthlyTrend,
+} from "@/lib/analytics";
 import {
   UserGroupIcon,
   BuildingOfficeIcon,
@@ -99,9 +108,36 @@ const systemAlerts = [
 
 export default function AdministratorDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [platformMetrics, setPlatformMetrics] =
+    useState<PlatformMetrics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Mock data for platform analytics
+  useEffect(() => {
+    // Simulate API call to fetch platform data
+    const mockUsers = Array.from({ length: 2847 }, (_, i) => ({ id: i }));
+    const mockBusinesses = Array.from({ length: 156 }, (_, i) => ({ id: i }));
+    const mockInvestments = Array.from({ length: 47 }, (_, i) => ({
+      id: i,
+      amount: Math.floor(Math.random() * 5000000) + 100000,
+      status: ["ACTIVE", "PENDING", "CANCELLED"][Math.floor(Math.random() * 3)],
+      createdAt: new Date(
+        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
+      ).toISOString(),
+    }));
+
+    const metrics = calculatePlatformMetrics(
+      mockUsers,
+      mockBusinesses,
+      mockInvestments
+    );
+    setPlatformMetrics(metrics);
+    setIsLoading(false);
+  }, []);
 
   const tabs = [
     { id: "overview", name: "Overview", icon: ChartBarIcon },
+    { id: "analytics", name: "Platform Analytics", icon: ClockIcon },
     { id: "investments", name: "Investments", icon: BanknotesIcon },
     { id: "approvals", name: "Approvals", icon: CheckBadgeIcon },
     { id: "reports", name: "Reports", icon: ExclamationTriangleIcon },
@@ -244,6 +280,162 @@ export default function AdministratorDashboard() {
       </div>
     </div>
   );
+
+  const renderPlatformAnalytics = () => {
+    if (isLoading || !platformMetrics) {
+      return (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* Platform Growth Metrics */}
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            Platform Growth Analytics
+          </h3>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Monthly Growth Trends */}
+            <div>
+              <h4 className="text-md font-medium text-gray-800 mb-4">
+                Monthly Platform Growth
+              </h4>
+              <LineChart
+                data={
+                  platformMetrics.monthlyTrends &&
+                  platformMetrics.monthlyTrends.length > 0
+                    ? platformMetrics.monthlyTrends.map((trend) => ({
+                        date: trend.month.slice(-2),
+                        value: trend.newUsers || 0,
+                      }))
+                    : [
+                        {
+                          date: new Date().toISOString().slice(5, 10).slice(-2),
+                          value: 0,
+                        },
+                      ]
+                }
+                width={500}
+                height={250}
+                color="#059669"
+              />
+            </div>
+
+            {/* Investment Volume Trends */}
+            <div>
+              <h4 className="text-md font-medium text-gray-800 mb-4">
+                Investment Volume Trends
+              </h4>
+              <LineChart
+                data={
+                  platformMetrics.monthlyTrends &&
+                  platformMetrics.monthlyTrends.length > 0
+                    ? platformMetrics.monthlyTrends.map((trend) => ({
+                        date: trend.month.slice(-2),
+                        value: (trend.investmentVolume || 0) / 1000000, // Convert to millions
+                      }))
+                    : [
+                        {
+                          date: new Date().toISOString().slice(5, 10).slice(-2),
+                          value: 0,
+                        },
+                      ]
+                }
+                width={500}
+                height={250}
+                color="#0891b2"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Platform Performance KPIs */}
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            Key Performance Indicators
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-green-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {formatPercentage(platformMetrics.platformGrowthRate)}
+              </div>
+              <div className="text-sm text-gray-600">Platform Growth Rate</div>
+            </div>
+            <div className="bg-blue-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {formatPercentage(platformMetrics.userAcquisitionRate)}
+              </div>
+              <div className="text-sm text-gray-600">User Acquisition Rate</div>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-purple-600">
+                {formatPercentage(platformMetrics.investmentSuccessRate)}
+              </div>
+              <div className="text-sm text-gray-600">
+                Investment Success Rate
+              </div>
+            </div>
+            <div className="bg-orange-50 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-orange-600">
+                {formatPercentage(platformMetrics.platformROI)}
+              </div>
+              <div className="text-sm text-gray-600">Platform ROI</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Analytics Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Monthly Business Creation */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h4 className="text-md font-medium text-gray-800 mb-4">
+              Monthly Business Creation
+            </h4>
+            <BarChart
+              data={
+                platformMetrics.monthlyTrends &&
+                platformMetrics.monthlyTrends.length > 0
+                  ? platformMetrics.monthlyTrends.slice(-6).map((trend) => ({
+                      label: trend.month.slice(-2),
+                      value: trend.newBusinesses || 0,
+                    }))
+                  : [
+                      {
+                        label: "No Data",
+                        value: 0,
+                      },
+                    ]
+              }
+              width={400}
+              height={250}
+              color="#7c3aed"
+            />
+          </div>
+
+          {/* Investment Distribution */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h4 className="text-md font-medium text-gray-800 mb-4">
+              Investment Size Distribution
+            </h4>
+            <PieChart
+              data={[
+                { label: "< ₦1M", value: 35 },
+                { label: "₦1M - ₦5M", value: 45 },
+                { label: "₦5M - ₦10M", value: 15 },
+                { label: "> ₦10M", value: 5 },
+              ]}
+              size={300}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderApprovals = () => (
     <div className="bg-white shadow rounded-lg">
@@ -419,6 +611,7 @@ export default function AdministratorDashboard() {
         </div>
         <div className="p-6">
           {activeTab === "overview" && renderOverview()}
+          {activeTab === "analytics" && renderPlatformAnalytics()}
           {activeTab === "investments" && (
             <InvestmentManagement userRole="ADMINISTRATOR" />
           )}

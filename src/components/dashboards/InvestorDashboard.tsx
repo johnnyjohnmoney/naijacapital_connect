@@ -7,6 +7,18 @@ import InvestmentManagement from "@/components/InvestmentManagement";
 import OpportunityList from "@/components/OpportunityList";
 import MessagingSystem from "@/components/MessagingSystem";
 import MessageNotificationWidget from "@/components/MessageNotificationWidget";
+import { LineChart, PieChart, BarChart, DonutChart } from "@/components/charts";
+import {
+  calculatePortfolioMetrics,
+  analyzeBySector,
+  generateTimeSeriesData,
+  formatCurrency,
+  formatPercentage,
+  type Investment,
+  type PerformanceMetrics,
+  type SectorAnalysis,
+  type TimeSeriesData,
+} from "@/lib/analytics";
 import {
   BanknotesIcon,
   ChartBarIcon,
@@ -17,6 +29,9 @@ import {
   PlusIcon,
   ExclamationTriangleIcon,
   ChatBubbleLeftRightIcon,
+  TrophyIcon,
+  CalendarIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 
 // Mock data for demonstration
@@ -106,9 +121,107 @@ const recentReturns = [
 
 export default function InvestorDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [portfolioMetrics, setPortfolioMetrics] =
+    useState<PerformanceMetrics | null>(null);
+  const [sectorAnalysis, setSectorAnalysis] = useState<SectorAnalysis[]>([]);
+  const [performanceData, setPerformanceData] = useState<TimeSeriesData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Enhanced mock data with realistic investment scenarios
+  const investmentData: Investment[] = [
+    {
+      id: "1",
+      amount: 500000,
+      currentValue: 625000,
+      investmentDate: "2023-06-15",
+      status: "Active",
+      business: {
+        title: "Lagos Tech Hub",
+        sector: "Technology",
+      },
+      returns: [
+        {
+          id: "r1",
+          amount: 25000,
+          date: "2023-09-15",
+          type: "Quarterly Dividend",
+        },
+        {
+          id: "r2",
+          amount: 30000,
+          date: "2023-12-15",
+          type: "Quarterly Dividend",
+        },
+        {
+          id: "r3",
+          amount: 32000,
+          date: "2024-03-15",
+          type: "Quarterly Dividend",
+        },
+      ],
+    },
+    {
+      id: "2",
+      amount: 750000,
+      currentValue: 892500,
+      investmentDate: "2023-08-22",
+      status: "Active",
+      business: {
+        title: "Green Energy Solutions",
+        sector: "Renewable Energy",
+      },
+      returns: [
+        { id: "r4", amount: 18750, date: "2023-11-22", type: "Monthly Return" },
+        { id: "r5", amount: 19200, date: "2023-12-22", type: "Monthly Return" },
+        { id: "r6", amount: 20100, date: "2024-01-22", type: "Monthly Return" },
+      ],
+    },
+    {
+      id: "3",
+      amount: 400000,
+      currentValue: 480000,
+      investmentDate: "2023-09-10",
+      status: "Active",
+      business: {
+        title: "AgriTech Innovations",
+        sector: "Agriculture",
+      },
+      returns: [
+        {
+          id: "r7",
+          amount: 20000,
+          date: "2023-12-10",
+          type: "Quarterly Return",
+        },
+        {
+          id: "r8",
+          amount: 22000,
+          date: "2024-03-10",
+          type: "Quarterly Return",
+        },
+      ],
+    },
+  ];
+
+  useEffect(() => {
+    // Calculate portfolio metrics
+    const metrics = calculatePortfolioMetrics(investmentData);
+    setPortfolioMetrics(metrics);
+
+    // Calculate sector analysis
+    const sectors = analyzeBySector(investmentData);
+    setSectorAnalysis(sectors);
+
+    // Generate performance time series
+    const timeSeries = generateTimeSeriesData(investmentData, 12);
+    setPerformanceData(timeSeries);
+
+    setIsLoading(false);
+  }, []);
 
   const tabs = [
     { id: "overview", name: "Overview" },
+    { id: "analytics", name: "Analytics" },
     { id: "portfolio", name: "Portfolio" },
     { id: "opportunities", name: "New Opportunities" },
     { id: "messages", name: "Messages" },
@@ -290,6 +403,72 @@ export default function InvestorDashboard() {
     </div>
   );
 
+  const renderAnalytics = () => {
+    if (isLoading || !portfolioMetrics) {
+      return (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            Portfolio Performance Analytics
+          </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-md font-medium text-gray-800 mb-4">
+                Portfolio Value Over Time
+              </h4>
+              <LineChart
+                data={
+                  performanceData && performanceData.length > 0
+                    ? performanceData.map((d) => ({
+                        date: d.date,
+                        value: (d.portfolioValue || 0) + (d.totalReturns || 0),
+                      }))
+                    : [
+                        {
+                          date: new Date().toISOString().slice(5, 10),
+                          value: 0,
+                        },
+                      ]
+                }
+                width={500}
+                height={250}
+                color="#059669"
+              />
+            </div>
+            <div>
+              <h4 className="text-md font-medium text-gray-800 mb-4">
+                Sector Distribution
+              </h4>
+              <PieChart
+                data={
+                  sectorAnalysis && sectorAnalysis.length > 0
+                    ? sectorAnalysis.map((sector) => ({
+                        label: sector.sector,
+                        value: sector.percentage || 0,
+                      }))
+                    : [
+                        {
+                          label: "No Data",
+                          value: 100,
+                        },
+                      ]
+                }
+                size={300}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderReturns = () => (
     <div className="bg-white shadow rounded-lg">
       <div className="px-6 py-4 border-b border-gray-200">
@@ -356,6 +535,7 @@ export default function InvestorDashboard() {
         </div>
         <div className="p-6">
           {activeTab === "overview" && renderOverview()}
+          {activeTab === "analytics" && renderAnalytics()}
           {activeTab === "portfolio" && renderPortfolio()}
           {activeTab === "opportunities" && renderOpportunities()}
           {activeTab === "messages" && renderMessages()}
