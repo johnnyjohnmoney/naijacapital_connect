@@ -1,0 +1,80 @@
+// Educational Content Schema Extension
+// Add to your existing schema.prisma file
+
+model EducationalContent {
+  id          String              @id @default(cuid())
+  title       String
+  description String
+  content     String              // Rich text content
+  category    ContentCategory
+  audience    ContentAudience
+  difficulty  ContentDifficulty
+  readTime    Int                 // estimated read time in minutes
+  published   Boolean             @default(false)
+  featured    Boolean             @default(false)
+  tags        String              // JSON array of tags
+  authorId    String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  // Relations
+  author      User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  views       ContentView[]
+  likes       ContentLike[]
+
+  @@map("educational_content")
+}
+
+model ContentView {
+  id        String   @id @default(cuid())
+  userId    String
+  contentId String
+  viewedAt  DateTime @default(now())
+
+  // Relations
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content EducationalContent  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@map("content_views")
+}
+
+model ContentLike {
+  id        String   @id @default(cuid())
+  userId    String
+  contentId String
+  likedAt   DateTime @default(now())
+
+  // Relations
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content EducationalContent  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@map("content_likes")
+}
+
+enum ContentCategory {
+  INVESTING_BASICS
+  PORTFOLIO_MANAGEMENT
+  RISK_ASSESSMENT
+  MARKET_ANALYSIS
+  BUSINESS_PLANNING
+  FINANCIAL_LITERACY
+  TAX_PLANNING
+  LEGAL_COMPLIANCE
+  STARTUP_FUNDING
+  GROWTH_STRATEGIES
+}
+
+enum ContentAudience {
+  INVESTORS
+  BUSINESS_OWNERS
+  BOTH
+  GENERAL
+}
+
+enum ContentDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}

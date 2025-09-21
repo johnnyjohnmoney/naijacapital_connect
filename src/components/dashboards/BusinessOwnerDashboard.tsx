@@ -4,6 +4,7 @@ import InvestmentManagement from "@/components/InvestmentManagement";
 import OpportunityCreationModal from "@/components/OpportunityCreationModal";
 import MessageComposer from "@/components/MessageComposer";
 import MessageNotificationWidget from "@/components/MessageNotificationWidget";
+import EducationalContentLibrary from "@/components/EducationalContentLibrary";
 import { LineChart, BarChart, DonutChart, PieChart } from "@/components/charts";
 import {
   calculateBusinessMetrics,
@@ -183,6 +184,7 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
     { id: "analytics", name: "Business Analytics" },
     { id: "opportunities", name: "Opportunities" },
     { id: "investments", name: "Investment Management" },
+    { id: "education", name: "Education" },
   ];
 
   const stats = [
@@ -493,6 +495,9 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
 
               {/* Other existing tabs content would go here */}
               {/* Opportunities Tab, Investment Management Tab, etc. */}
+              {activeTab === "education" && (
+                <EducationalContentLibrary userRole="BUSINESS_OWNER" />
+              )}
             </div>
           </div>
         </>

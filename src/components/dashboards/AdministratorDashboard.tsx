@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import InvestmentManagement from "@/components/InvestmentManagement";
+import EducationalContentManager from "@/components/EducationalContentManager";
 import { LineChart, BarChart, PieChart, DonutChart } from "@/components/charts";
 import {
   calculatePlatformMetrics,
@@ -139,6 +140,7 @@ export default function AdministratorDashboard() {
     { id: "overview", name: "Overview", icon: ChartBarIcon },
     { id: "analytics", name: "Platform Analytics", icon: ClockIcon },
     { id: "investments", name: "Investments", icon: BanknotesIcon },
+    { id: "education", name: "Educational Content", icon: UserGroupIcon },
     { id: "approvals", name: "Approvals", icon: CheckBadgeIcon },
     { id: "reports", name: "Reports", icon: ExclamationTriangleIcon },
     { id: "users", name: "User Management", icon: UserGroupIcon },
@@ -615,6 +617,7 @@ export default function AdministratorDashboard() {
           {activeTab === "investments" && (
             <InvestmentManagement userRole="ADMINISTRATOR" />
           )}
+          {activeTab === "education" && <EducationalContentManager />}
           {activeTab === "approvals" && renderApprovals()}
           {activeTab === "reports" && renderReports()}
           {activeTab === "users" && (

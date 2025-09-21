@@ -7,6 +7,9 @@ import InvestmentManagement from "@/components/InvestmentManagement";
 import OpportunityList from "@/components/OpportunityList";
 import MessagingSystem from "@/components/MessagingSystem";
 import MessageNotificationWidget from "@/components/MessageNotificationWidget";
+import InvestmentCalculator from "@/components/InvestmentCalculator";
+import PortfolioExport from "@/components/PortfolioExport";
+import EducationalContentLibrary from "@/components/EducationalContentLibrary";
 import { LineChart, PieChart, BarChart, DonutChart } from "@/components/charts";
 import {
   calculatePortfolioMetrics,
@@ -222,7 +225,10 @@ export default function InvestorDashboard() {
   const tabs = [
     { id: "overview", name: "Overview" },
     { id: "analytics", name: "Analytics" },
+    { id: "calculator", name: "Investment Calculator" },
     { id: "portfolio", name: "Portfolio" },
+    { id: "export", name: "Export Portfolio" },
+    { id: "education", name: "Education" },
     { id: "opportunities", name: "New Opportunities" },
     { id: "messages", name: "Messages" },
     { id: "returns", name: "Returns" },
@@ -536,7 +542,19 @@ export default function InvestorDashboard() {
         <div className="p-6">
           {activeTab === "overview" && renderOverview()}
           {activeTab === "analytics" && renderAnalytics()}
+          {activeTab === "calculator" && <InvestmentCalculator />}
           {activeTab === "portfolio" && renderPortfolio()}
+          {activeTab === "export" && (
+            <PortfolioExport
+              portfolioData={portfolioData}
+              performanceMetrics={portfolioMetrics}
+              sectorAnalysis={sectorAnalysis}
+              returnHistory={recentReturns}
+            />
+          )}
+          {activeTab === "education" && (
+            <EducationalContentLibrary userRole="INVESTOR" />
+          )}
           {activeTab === "opportunities" && renderOpportunities()}
           {activeTab === "messages" && renderMessages()}
           {activeTab === "returns" && renderReturns()}
