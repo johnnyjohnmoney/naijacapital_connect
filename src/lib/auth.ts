@@ -69,9 +69,10 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
 
-export const handlers = { GET: handler, POST: handler };
 export { handler as GET, handler as POST };
+export default handler;
