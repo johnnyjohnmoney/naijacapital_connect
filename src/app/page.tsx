@@ -1,10 +1,25 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   CheckIcon,
   ArrowTrendingUpIcon,
   ShieldCheckIcon,
   GlobeAltIcon,
 } from "@heroicons/react/24/outline";
+
+export const metadata: Metadata = {
+  title: "NaijaConnect Capital - Diaspora Investment Platform",
+  description:
+    "Connect your capital with vetted Nigerian investment opportunities. Secure, transparent, and profitable investments for the diaspora community.",
+  keywords:
+    "Nigerian investments, diaspora, capital, investment platform, Nigeria, returns",
+  openGraph: {
+    title: "NaijaConnect Capital - Diaspora Investment Platform",
+    description:
+      "Connect your capital with vetted Nigerian investment opportunities.",
+    type: "website",
+  },
+};
 
 const features = [
   {
@@ -30,6 +45,54 @@ const features = [
     description:
       "Invest from anywhere in the world with our user-friendly platform designed for the diaspora.",
     icon: GlobeAltIcon,
+  },
+];
+
+const testimonials = [
+  {
+    content:
+      "NaijaConnect made it so easy to invest back home. The returns have been fantastic!",
+    author: "Adaora K.",
+    role: "Software Engineer, Canada",
+  },
+  {
+    content:
+      "Finally, a platform I trust with my Nigerian investments. Transparent and secure.",
+    author: "Michael O.",
+    role: "Doctor, UK",
+  },
+  {
+    content:
+      "The vetting process gives me confidence. Great ROI on my agri-business investment.",
+    author: "Funmi A.",
+    role: "Business Analyst, USA",
+  },
+];
+
+const steps = [
+  {
+    id: "01",
+    name: "Create Account",
+    description:
+      "Sign up with your email and complete our simple verification process.",
+  },
+  {
+    id: "02",
+    name: "Browse Opportunities",
+    description:
+      "Explore vetted investment opportunities across various sectors in Nigeria.",
+  },
+  {
+    id: "03",
+    name: "Invest Securely",
+    description:
+      "Choose your investment amount and complete secure transactions.",
+  },
+  {
+    id: "04",
+    name: "Track & Earn",
+    description:
+      "Monitor your investments and receive returns directly to your account.",
   },
 ];
 
@@ -70,13 +133,13 @@ export default function Home() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
                 href="/auth/signup"
-                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transform transition-all duration-200 hover:scale-105"
               >
                 Start Investing
               </Link>
               <Link
                 href="/opportunities"
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-gray-900 hover:text-green-600 transition-colors duration-200"
               >
                 View Opportunities <span aria-hidden="true">→</span>
               </Link>
@@ -157,6 +220,130 @@ export default function Home() {
         </div>
       </div>
 
+      {/* How it works section */}
+      <div className="bg-gray-900 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:text-center">
+            <h2 className="text-base font-semibold leading-7 text-green-400">
+              Simple Process
+            </h2>
+            <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              How It Works
+            </p>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Getting started with NaijaConnect Capital is simple. Follow these
+              four easy steps to begin your investment journey.
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
+              {steps.map((step) => (
+                <div key={step.name} className="flex flex-col">
+                  <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
+                    <div className="h-10 w-10 rounded-lg bg-green-600 flex items-center justify-center">
+                      <span className="text-sm font-bold text-white">
+                        {step.id}
+                      </span>
+                    </div>
+                    {step.name}
+                  </dt>
+                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                    <p className="flex-auto">{step.description}</p>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials section */}
+      <div className="bg-gray-50 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Trusted by Diaspora Investors
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              See what our community has to say about their investment
+              experience.
+            </p>
+          </div>
+          <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm leading-6 text-gray-900 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-3">
+            {testimonials.map((testimonial, testimonialIdx) => (
+              <figure
+                key={testimonialIdx}
+                className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 hover:shadow-xl transition-shadow duration-300"
+              >
+                <blockquote className="text-gray-900">
+                  <p>"{testimonial.content}"</p>
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-x-4">
+                  <div className="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
+                    <span className="text-sm font-semibold text-white">
+                      {testimonial.author.charAt(0)}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-semibold">{testimonial.author}</div>
+                    <div className="text-gray-600">{testimonial.role}</div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ section */}
+      <div className="bg-white py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
+            <h2 className="text-3xl font-bold leading-10 tracking-tight text-gray-900 text-center mb-12">
+              Frequently Asked Questions
+            </h2>
+            <dl className="space-y-6 divide-y divide-gray-900/10">
+              <div className="pt-6">
+                <dt className="text-base font-semibold leading-7 text-gray-900">
+                  Is my investment secure?
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">
+                  Yes, we use bank-level encryption and all opportunities are
+                  thoroughly vetted by our expert team.
+                </dd>
+              </div>
+              <div className="pt-6">
+                <dt className="text-base font-semibold leading-7 text-gray-900">
+                  What's the minimum investment amount?
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">
+                  Our minimum investment starts from $100 USD or ₦50,000, making
+                  it accessible for diaspora investors.
+                </dd>
+              </div>
+              <div className="pt-6">
+                <dt className="text-base font-semibold leading-7 text-gray-900">
+                  How do I receive my returns?
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">
+                  Returns are automatically transferred to your registered bank
+                  account or digital wallet quarterly.
+                </dd>
+              </div>
+              <div className="pt-6">
+                <dt className="text-base font-semibold leading-7 text-gray-900">
+                  Can I invest from outside Nigeria?
+                </dt>
+                <dd className="mt-2 text-base leading-7 text-gray-600">
+                  Yes, our platform is specifically designed for diaspora
+                  investors and supports international payment methods.
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+
       {/* CTA section */}
       <div className="bg-green-50">
         <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
@@ -172,13 +359,13 @@ export default function Home() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
                 href="/auth/signup"
-                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transform transition-all duration-200 hover:scale-105"
               >
                 Get Started Today
               </Link>
               <Link
                 href="/contact"
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-gray-900 hover:text-green-600 transition-colors duration-200"
               >
                 Contact Our Team <span aria-hidden="true">→</span>
               </Link>

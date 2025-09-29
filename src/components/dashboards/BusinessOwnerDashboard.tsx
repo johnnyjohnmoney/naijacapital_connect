@@ -75,6 +75,29 @@ interface RecentInvestment {
   };
 }
 
+interface PendingInvestor {
+  id: string;
+  investorId: string;
+  opportunityId: string;
+  amount?: number;
+  status: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+  createdAt: string;
+  investor: {
+    id: string;
+    name?: string;
+    email?: string;
+    profile?: {
+      experience?: string;
+      investmentPreference?: string;
+    };
+  };
+  opportunity?: {
+    id: string;
+    title: string;
+    targetCapital: number;
+  };
+}
+
 const calculateProgress = (current: number, target: number) => {
   return Math.min((current / target) * 100, 100);
 };
@@ -82,6 +105,7 @@ const calculateProgress = (current: number, target: number) => {
 export default function BusinessOwnerDashboard({ user }: { user: any }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showMessageComposer, setShowMessageComposer] = useState(false);
+  const [showInvestorManagement, setShowInvestorManagement] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedInvestor, setSelectedInvestor] = useState<{
     id: string;
@@ -95,6 +119,13 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
   const [recentInvestments, setRecentInvestments] = useState<
     RecentInvestment[]
   >([]);
+  const [pendingInvestors, setPendingInvestors] = useState<PendingInvestor[]>(
+    []
+  );
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
   const [businessMetrics, setBusinessMetrics] =
     useState<BusinessMetrics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -174,9 +205,114 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
     }
   };
 
+  // Fetch pending investors
+  const fetchPendingInvestors = async () => {
+    try {
+      const response = await fetch("/api/investments/business?status=PENDING");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch pending investors");
+      }
+
+      const data = await response.json();
+      console.log("Pending investors data:", data);
+      console.log("Investments array:", data.investments);
+
+      // Add additional validation
+      const validInvestments = (data.investments || []).filter(
+        (inv: any) => inv && inv.id
+      );
+      console.log("Valid investments:", validInvestments);
+
+      setPendingInvestors(validInvestments);
+    } catch (err) {
+      console.error("Failed to fetch pending investors:", err);
+      setPendingInvestors([]); // Set empty array on error
+    }
+  };
+
+  // Handle investor approval/rejection
+  const handleInvestorDecision = async (
+    investmentId: string,
+    decision: "APPROVED" | "REJECTED"
+  ) => {
+    try {
+      console.log(
+        `Attempting to ${decision.toLowerCase()} investment:`,
+        investmentId
+      );
+
+      // Map UI decisions to API status values
+      const statusMap = {
+        APPROVED: "ACTIVE",
+        REJECTED: "CANCELLED",
+      };
+
+      const apiStatus = statusMap[decision];
+      console.log(`Mapping ${decision} to API status: ${apiStatus}`);
+
+      const response = await fetch(`/api/investments/${investmentId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: apiStatus }),
+      });
+
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
+      if (!response.ok) {
+        // Try to get more detailed error information
+        let errorMessage = `Failed to ${decision.toLowerCase()} investment`;
+        try {
+          const errorData = await response.text();
+          console.log("Error response body:", errorData);
+          errorMessage += ` (Status: ${response.status})`;
+          if (errorData) {
+            errorMessage += ` - ${errorData}`;
+          }
+        } catch (parseError) {
+          console.log("Could not parse error response");
+        }
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+      console.log("Success response data:", responseData);
+
+      // Refresh data after decision
+      await fetchPendingInvestors();
+      await fetchInvestorAnalytics();
+
+      // Show success message
+      setNotification({
+        type: "success",
+        message: `Investment ${decision.toLowerCase()} successfully!`,
+      });
+
+      // Auto-hide notification after 5 seconds
+      setTimeout(() => setNotification(null), 5000);
+    } catch (err) {
+      console.error(`Failed to ${decision.toLowerCase()} investment:`, err);
+
+      // More user-friendly error message
+      const errorMessage =
+        err instanceof Error ? err.message : "Unknown error occurred";
+      setNotification({
+        type: "error",
+        message: `Failed to ${decision.toLowerCase()} investment: ${errorMessage}`,
+      });
+
+      // Auto-hide notification after 8 seconds for errors
+      setTimeout(() => setNotification(null), 8000);
+    }
+  };
+
   useEffect(() => {
     fetchOpportunities();
     fetchInvestorAnalytics();
+    fetchPendingInvestors();
   }, []);
 
   const tabs = [
@@ -242,6 +378,68 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
                 Try again
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification Toast */}
+      {notification && (
+        <div
+          className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md ${
+            notification.type === "success"
+              ? "bg-green-50 border border-green-200"
+              : "bg-red-50 border border-red-200"
+          }`}
+        >
+          <div className="flex items-start">
+            {notification.type === "success" ? (
+              <CheckCircleIcon className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
+            ) : (
+              <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
+            )}
+            <div className="ml-3 flex-1">
+              <p
+                className={`text-sm font-medium ${
+                  notification.type === "success"
+                    ? "text-green-800"
+                    : "text-red-800"
+                }`}
+              >
+                {notification.type === "success" ? "Success" : "Error"}
+              </p>
+              <p
+                className={`text-sm mt-1 ${
+                  notification.type === "success"
+                    ? "text-green-700"
+                    : "text-red-700"
+                }`}
+              >
+                {notification.message}
+              </p>
+            </div>
+            <button
+              onClick={() => setNotification(null)}
+              className={`ml-4 inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                notification.type === "success"
+                  ? "text-green-500 hover:bg-green-100 focus:ring-green-600"
+                  : "text-red-500 hover:bg-red-100 focus:ring-red-600"
+              }`}
+            >
+              <span className="sr-only">Dismiss</span>
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       )}
@@ -349,7 +547,10 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
                           </p>
                         </div>
                       </button>
-                      <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                      <button
+                        onClick={() => setShowInvestorManagement(true)}
+                        className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
                         <UserGroupIcon className="h-6 w-6 text-green-600 mr-3" />
                         <div>
                           <p className="font-medium text-gray-900">
@@ -531,6 +732,210 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
             setSelectedInvestor(null);
           }}
         />
+      )}
+
+      {/* Investor Management Modal */}
+      {showInvestorManagement && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              onClick={() => setShowInvestorManagement(false)}
+            />
+
+            <div className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
+              <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+                <button
+                  type="button"
+                  className="rounded-md bg-white text-gray-400 hover:text-gray-500"
+                  onClick={() => setShowInvestorManagement(false)}
+                >
+                  <span className="sr-only">Close</span>
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="sm:flex sm:items-start">
+                <div className="w-full">
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Investor Management
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Review and approve investor applications for your
+                      opportunities
+                    </p>
+                  </div>
+
+                  {/* Pending Investors List */}
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {pendingInvestors.length === 0 ? (
+                      <div className="text-center py-8">
+                        <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">
+                          No pending investors
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-500">
+                          All investor applications have been reviewed.
+                        </p>
+                      </div>
+                    ) : (
+                      pendingInvestors.map((investor) => (
+                        <div
+                          key={investor.id}
+                          className="bg-gray-50 rounded-lg p-4"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-2">
+                                <div className="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center">
+                                  <span className="text-sm font-semibold text-white">
+                                    {investor.investor?.name?.charAt(0) || "?"}
+                                  </span>
+                                </div>
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-900">
+                                    {investor.investor?.name ||
+                                      "Unknown Investor"}
+                                  </h4>
+                                  <p className="text-sm text-gray-500">
+                                    {investor.investor?.email ||
+                                      "No email provided"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                <div>
+                                  <span className="font-medium text-gray-700">
+                                    Investment Amount:
+                                  </span>
+                                  <p className="text-green-600 font-semibold">
+                                    {formatCurrency(investor.amount || 0)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-700">
+                                    Opportunity:
+                                  </span>
+                                  <p className="text-gray-900">
+                                    {investor.opportunity?.title || "N/A"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-700">
+                                    Applied:
+                                  </span>
+                                  <p className="text-gray-600">
+                                    {investor.createdAt
+                                      ? new Date(
+                                          investor.createdAt
+                                        ).toLocaleDateString()
+                                      : "Unknown date"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {investor.investor.profile && (
+                                <div className="mt-3 text-sm">
+                                  {investor.investor.profile.experience && (
+                                    <div className="mb-2">
+                                      <span className="font-medium text-gray-700">
+                                        Experience:
+                                      </span>
+                                      <p className="text-gray-600">
+                                        {investor.investor.profile.experience}
+                                      </p>
+                                    </div>
+                                  )}
+                                  {investor.investor.profile
+                                    .investmentPreference && (
+                                    <div>
+                                      <span className="font-medium text-gray-700">
+                                        Investment Preference:
+                                      </span>
+                                      <p className="text-gray-600">
+                                        {
+                                          investor.investor.profile
+                                            .investmentPreference
+                                        }
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex flex-col space-y-2 ml-4">
+                              <button
+                                onClick={() =>
+                                  handleInvestorDecision(
+                                    investor.id,
+                                    "APPROVED"
+                                  )
+                                }
+                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                              >
+                                <CheckCircleIcon className="h-4 w-4 mr-1" />
+                                Approve
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleInvestorDecision(
+                                    investor.id,
+                                    "REJECTED"
+                                  )
+                                }
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                              >
+                                <svg
+                                  className="h-4 w-4 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      onClick={() => setShowInvestorManagement(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
