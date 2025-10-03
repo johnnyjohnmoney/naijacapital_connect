@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -37,14 +36,16 @@ export default function Header() {
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm relative z-50 transition-colors duration-300">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between py-3 px-6 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5">
-            <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-              NaijaConnect Capital
-            </span>
+          <Link href="/" className="-m-1 p-1">
+            <img
+              src="/NACC_logo.png"
+              alt="NaijaConnect Capital"
+              className="h-14 w-auto"
+            />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -114,10 +115,12 @@ export default function Header() {
           <div className="fixed inset-0 z-40 bg-black bg-opacity-25"></div>
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:sm:ring-gray-100/10 transition-colors duration-300">
             <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5">
-                <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                  NaijaConnect Capital
-                </span>
+              <Link href="/" className="-m-1 p-1">
+                <img
+                  src="/NACC_logo.png"
+                  alt="NaijaConnect Capital"
+                  className="h-10 w-auto"
+                />
               </Link>
               <button
                 type="button"

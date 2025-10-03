@@ -63,7 +63,6 @@ export function ThemeProvider({
     // Save to localStorage
     localStorage.setItem("naijaconnect-theme", theme);
   }, [theme, mounted]);
-
   const toggleTheme = () => {
     setThemeState((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
@@ -83,7 +82,7 @@ export function ThemeProvider({
 
     return (
       <ThemeContext.Provider value={defaultValue}>
-        <div className="min-h-screen bg-white">{children}</div>
+        {children}
       </ThemeContext.Provider>
     );
   }
@@ -95,16 +94,6 @@ export function ThemeProvider({
   };
 
   return (
-    <ThemeContext.Provider value={value}>
-      <div
-        className={`min-h-screen transition-colors duration-300 ${
-          theme === "dark"
-            ? "bg-gray-900 text-white"
-            : "bg-gray-50 text-gray-900"
-        }`}
-      >
-        {children}
-      </div>
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
