@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -100,16 +99,23 @@ export async function GET(request: NextRequest) {
     const totalCount = await prisma.investment.count({ where });
 
     // Calculate summary statistics
-    const totalAmount = investments.reduce((sum, inv) => sum + inv.amount, 0);
+    const totalAmount = investments.reduce(
+      (sum: number, inv: any) => sum + inv.amount,
+      0
+    );
     const pendingInvestments = investments.filter(
-      (inv) => inv.status === "PENDING"
+      (inv: any) => inv.status === "PENDING"
     ).length;
     const activeInvestments = investments.filter(
-      (inv) => inv.status === "ACTIVE"
+      (inv: any) => inv.status === "ACTIVE"
     ).length;
     const totalReturns = investments.reduce(
-      (sum, inv) =>
-        sum + inv.returns.reduce((returnSum, ret) => returnSum + ret.amount, 0),
+      (sum: number, inv: any) =>
+        sum +
+        inv.returns.reduce(
+          (returnSum: number, ret: any) => returnSum + ret.amount,
+          0
+        ),
       0
     );
 

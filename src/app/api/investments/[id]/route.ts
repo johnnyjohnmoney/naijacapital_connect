@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -10,16 +9,12 @@ const statusUpdateSchema = z.object({
   note: z.string().optional(),
 });
 
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
+type RouteParams = { params: Promise<{ id: string }> };
 
 // Get specific investment details
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -27,7 +22,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const investmentId = context.params.id;
+    const { id: investmentId } = await params;
 
     const investment = await prisma.investment.findUnique({
       where: { id: investmentId },
@@ -80,7 +75,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     // Calculate investment performance
     const totalReturns = investment.returns.reduce(
-      (sum, ret) => sum + ret.amount,
+      (sum: number, ret: any) => sum + ret.amount,
       0
     );
     const currentValue = investment.amount + totalReturns;
@@ -108,9 +103,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
 }
 
 // Update investment status (for business owners and admins)
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -118,7 +113,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const investmentId = context.params.id;
+    const { id: investmentId } = await params;
     const body = await request.json();
     const validatedData = statusUpdateSchema.parse(body);
 
@@ -213,9 +208,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 }
 
 // Cancel investment (for investors, before approval)
-export async function DELETE(request: NextRequest, context: RouteContext) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -223,7 +218,7 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const investmentId = context.params.id;
+    const { id: investmentId } = await params;
 
     const investment = await prisma.investment.findUnique({
       where: { id: investmentId },

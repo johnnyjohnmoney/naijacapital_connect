@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-interface RouteContext {
-  params: {
-    userId: string;
-  };
-}
+type RouteParams = { params: Promise<{ userId: string }> };
 
 // Get conversation between current user and another user
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -20,7 +15,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const { userId } = context.params;
+    const { userId } = await params;
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");

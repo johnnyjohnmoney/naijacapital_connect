@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 // Get list of conversations (users that the current user has messaged with)
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -29,13 +28,13 @@ export async function GET(request: NextRequest) {
 
     // Combine and get unique user IDs
     const userIds = new Set([
-      ...sentMessages.map((m) => m.receiverId),
-      ...receivedMessages.map((m) => m.senderId),
+      ...sentMessages.map((m: any) => m.receiverId),
+      ...receivedMessages.map((m: any) => m.senderId),
     ]);
 
     // Get user details and latest message for each conversation
     const conversations = await Promise.all(
-      Array.from(userIds).map(async (userId) => {
+      Array.from(userIds).map(async (userId: any) => {
         const user = await prisma.user.findUnique({
           where: { id: userId },
           select: {
@@ -84,8 +83,8 @@ export async function GET(request: NextRequest) {
 
     // Filter out conversations where user doesn't exist and sort by latest message
     const validConversations = conversations
-      .filter((conv) => conv.user !== null)
-      .sort((a, b) => {
+      .filter((conv: any) => conv.user !== null)
+      .sort((a: any, b: any) => {
         if (!a.latestMessage) return 1;
         if (!b.latestMessage) return -1;
         return (

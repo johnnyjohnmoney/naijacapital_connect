@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 const adminCreateSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -107,7 +106,7 @@ export async function POST(request: NextRequest) {
 // Optional: Allow existing admins to create new admins
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // Check if user is authenticated and is an admin
     if (!session || session.user?.role !== "ADMINISTRATOR") {

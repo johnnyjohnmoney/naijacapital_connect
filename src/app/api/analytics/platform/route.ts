@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   calculatePlatformMetrics,
@@ -9,7 +8,7 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -99,43 +98,43 @@ export async function GET(request: NextRequest) {
     );
 
     const newUsersThisMonth = users.filter(
-      (user) => new Date(user.createdAt) >= lastMonth
+      (user: any) => new Date(user.createdAt) >= lastMonth
     ).length;
     const newBusinessesThisMonth = businesses.filter(
-      (business) => new Date(business.createdAt) >= lastMonth
+      (business: any) => new Date(business.createdAt) >= lastMonth
     ).length;
     const newInvestmentsThisMonth = investments.filter(
-      (investment) => new Date(investment.createdAt) >= lastMonth
+      (investment: any) => new Date(investment.createdAt) >= lastMonth
     ).length;
 
     const newUsersLastYear = users.filter(
-      (user) => new Date(user.createdAt) >= lastYear
+      (user: any) => new Date(user.createdAt) >= lastYear
     ).length;
     const newBusinessesLastYear = businesses.filter(
-      (business) => new Date(business.createdAt) >= lastYear
+      (business: any) => new Date(business.createdAt) >= lastYear
     ).length;
     const newInvestmentsLastYear = investments.filter(
-      (investment) => new Date(investment.createdAt) >= lastYear
+      (investment: any) => new Date(investment.createdAt) >= lastYear
     ).length;
 
     // Calculate recent activity
     const recentUsers = users
       .sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
       .slice(0, 10);
 
     const recentBusinesses = businesses
       .sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
       .slice(0, 10);
 
     const recentInvestments = investments
       .sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
       .slice(0, 10);
@@ -148,7 +147,10 @@ export async function GET(request: NextRequest) {
           totalUsers: users.length,
           totalBusinesses: businesses.length,
           totalInvestments: investments.length,
-          totalVolume: investments.reduce((sum, inv) => sum + inv.amount, 0),
+          totalVolume: investments.reduce(
+            (sum: number, inv: any) => sum + inv.amount,
+            0
+          ),
         },
         distributions: {
           usersByRole,

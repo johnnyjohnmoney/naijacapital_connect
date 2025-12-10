@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -98,23 +97,24 @@ export async function GET(request: NextRequest) {
     // Calculate summary statistics
     const totalOpportunities = opportunities.length;
     const totalTargetCapital = opportunities.reduce(
-      (sum, opp) => sum + opp.targetCapital,
+      (sum: number, opp: any) => sum + opp.targetCapital,
       0
     );
     const totalRaised = opportunities.reduce(
-      (sum, opp) => sum + opp.currentRaised,
+      (sum: number, opp: any) => sum + opp.currentRaised,
       0
     );
     const activeOpportunities = opportunities.filter(
-      (opp) => opp.status === "OPEN"
+      (opp: any) => opp.status === "OPEN"
     ).length;
     const totalInvestors = opportunities.reduce(
-      (sum, opp) => sum + opp._count.investments,
+      (sum: number, opp: any) => sum + opp._count.investments,
       0
     );
     const pendingInvestments = opportunities.reduce(
-      (sum, opp) =>
-        sum + opp.investments.filter((inv) => inv.status === "PENDING").length,
+      (sum: number, opp: any) =>
+        sum +
+        opp.investments.filter((inv: any) => inv.status === "PENDING").length,
       0
     );
 

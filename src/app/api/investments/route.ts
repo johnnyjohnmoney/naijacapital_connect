@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -13,7 +12,7 @@ const investmentSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -194,7 +193,7 @@ export async function POST(request: NextRequest) {
 // Get user's investments
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "Authentication required" },
@@ -254,10 +253,17 @@ export async function GET(request: NextRequest) {
     const totalCount = await prisma.investment.count({ where });
 
     // Calculate summary statistics
-    const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
+    const totalInvested = investments.reduce(
+      (sum: number, inv: any) => sum + inv.amount,
+      0
+    );
     const totalReturns = investments.reduce(
-      (sum, inv) =>
-        sum + inv.returns.reduce((returnSum, ret) => returnSum + ret.amount, 0),
+      (sum: number, inv: any) =>
+        sum +
+        inv.returns.reduce(
+          (returnSum: number, ret: any) => returnSum + ret.amount,
+          0
+        ),
       0
     );
 
@@ -273,8 +279,9 @@ export async function GET(request: NextRequest) {
         totalInvested,
         totalReturns,
         totalValue: totalInvested + totalReturns,
-        activeInvestments: investments.filter((inv) => inv.status === "ACTIVE")
-          .length,
+        activeInvestments: investments.filter(
+          (inv: any) => inv.status === "ACTIVE"
+        ).length,
       },
     });
   } catch (error) {

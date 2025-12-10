@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   calculateBusinessMetrics,
@@ -9,7 +8,7 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -56,7 +55,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Flatten all investments from all opportunities
-    const allInvestments = opportunities.flatMap((opp) =>
+    const allInvestments = opportunities.flatMap((opp: any) =>
       opp.investments.map((inv: any) => ({
         ...inv,
         business: {
@@ -95,7 +94,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: {
         businessMetrics,
-        opportunities: opportunities.map((opp) => ({
+        opportunities: opportunities.map((opp: any) => ({
           id: opp.id,
           title: opp.title,
           targetCapital: opp.targetCapital,
@@ -111,7 +110,7 @@ export async function GET(request: NextRequest) {
           totalInvestors,
           pendingInvestments,
           activeOpportunities: opportunities.filter(
-            (opp) => opp.status === "OPEN"
+            (opp: any) => opp.status === "OPEN"
           ).length,
         },
         recentInvestments: allInvestments.slice(0, 10).map((inv: any) => ({
