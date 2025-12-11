@@ -8,6 +8,18 @@ const prisma = new PrismaClient();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  debug: false,
+  logger: {
+    error: (code, ...message) => {
+      console.error(code, message);
+    },
+    warn: (code) => {
+      console.warn(code);
+    },
+    debug: (code, ...message) => {
+      console.debug(code, message);
+    },
+  },
   providers: [
     Credentials({
       name: "credentials",
@@ -69,5 +81,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/auth/signin",
   },
+  basePath: "/api/auth",
   secret: process.env.NEXTAUTH_SECRET,
 });
