@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import InvestmentManagement from "@/components/InvestmentManagement";
-import EducationalContentManager from "@/components/EducationalContentManager";
+import OpportunityReviewPanel from "@/components/admin/OpportunityReviewPanel";
+import UserManagementPanel from "@/components/admin/UserManagementPanel";
+import CompliancePanel from "@/components/admin/CompliancePanel";
+import FinancialOversightPanel from "@/components/admin/FinancialOversightPanel";
+import SystemConfigurationPanel from "@/components/admin/SystemConfigurationPanel";
 import { LineChart, BarChart, PieChart, DonutChart } from "@/components/charts";
 import {
   calculatePlatformMetrics,
@@ -138,13 +142,17 @@ export default function AdministratorDashboard() {
 
   const tabs = [
     { id: "overview", name: "Overview", icon: ChartBarIcon },
-    { id: "analytics", name: "Platform Analytics", icon: ClockIcon },
-    { id: "investments", name: "Investments", icon: BanknotesIcon },
-    { id: "education", name: "Educational Content", icon: UserGroupIcon },
-    { id: "approvals", name: "Approvals", icon: CheckBadgeIcon },
-    { id: "reports", name: "Reports", icon: ExclamationTriangleIcon },
+    { id: "opportunities", name: "Opportunity Reviews", icon: CheckBadgeIcon },
     { id: "users", name: "User Management", icon: UserGroupIcon },
-    { id: "system", name: "System Health", icon: ClockIcon },
+    { id: "analytics", name: "Analytics & Insights", icon: ClockIcon },
+    { id: "investments", name: "Investments", icon: BanknotesIcon },
+    { id: "financial", name: "Financial Oversight", icon: BanknotesIcon },
+    {
+      id: "reports",
+      name: "Compliance & Reports",
+      icon: ExclamationTriangleIcon,
+    },
+    { id: "system", name: "System Configuration", icon: ClockIcon },
   ];
 
   const formatCurrency = (amount: number) => {
@@ -591,7 +599,10 @@ export default function AdministratorDashboard() {
       {/* Navigation Tabs */}
       <div className="bg-white shadow rounded-lg">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+          <nav
+            className="-mb-px flex space-x-4 md:space-x-8 px-6 overflow-x-auto scrollbar-thin"
+            aria-label="Tabs"
+          >
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -602,7 +613,7 @@ export default function AdministratorDashboard() {
                     activeTab === tab.id
                       ? "border-green-500 text-green-600"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2`}
+                  } whitespace-nowrap flex-shrink-0 py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2`}
                 >
                   <Icon className="h-5 w-5" />
                   <span>{tab.name}</span>
@@ -613,27 +624,17 @@ export default function AdministratorDashboard() {
         </div>
         <div className="p-6">
           {activeTab === "overview" && renderOverview()}
+          {activeTab === "opportunities" && (
+            <OpportunityReviewPanel adminId="current-admin-id" />
+          )}
           {activeTab === "analytics" && renderPlatformAnalytics()}
           {activeTab === "investments" && (
             <InvestmentManagement userRole="ADMINISTRATOR" />
           )}
-          {activeTab === "education" && <EducationalContentManager />}
-          {activeTab === "approvals" && renderApprovals()}
-          {activeTab === "reports" && renderReports()}
-          {activeTab === "users" && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                User Management interface coming soon...
-              </p>
-            </div>
-          )}
-          {activeTab === "system" && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                System Health monitoring coming soon...
-              </p>
-            </div>
-          )}
+          {activeTab === "financial" && <FinancialOversightPanel />}
+          {activeTab === "reports" && <CompliancePanel />}
+          {activeTab === "users" && <UserManagementPanel />}
+          {activeTab === "system" && <SystemConfigurationPanel />}
         </div>
       </div>
     </div>

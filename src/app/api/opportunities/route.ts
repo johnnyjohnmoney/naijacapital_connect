@@ -44,10 +44,20 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const skip = (page - 1) * limit;
 
+    // Check authentication for role-based filtering
+    const session = await auth();
+    const isAdmin = session?.user?.role === "ADMINISTRATOR";
+
     // Build filter conditions
-    const where: any = {
-      status: "OPEN",
-    };
+    const where: any = {};
+
+    // Non-admins can only see OPEN, CLOSED, FULLY_FUNDED, CANCELLED opportunities
+    if (!isAdmin) {
+      where.status = { in: ["OPEN", "CLOSED", "FULLY_FUNDED", "CANCELLED"] };
+    } else {
+      // Admins see all statuses, but default to OPEN if no specific filter
+      where.status = "OPEN";
+    }
 
     if (industry && industry !== "all") {
       where.industry = industry;
@@ -144,7 +154,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create the business opportunity
+    // Create the business opportunity with PENDING_REVIEW status
     const business = await prisma.business.create({
       data: {
         title: validatedData.title,
@@ -156,7 +166,7 @@ export async function POST(request: NextRequest) {
         timeline: validatedData.timeline,
         industry: validatedData.industry,
         riskLevel: validatedData.riskLevel,
-        status: "OPEN",
+        status: "PENDING_REVIEW",
         currentRaised: 0,
         ownerId: session.user.id,
       },
@@ -171,11 +181,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create notification for successful creation
+    // Create notification for successful submission
     await prisma.notification.create({
       data: {
-        title: "Opportunity Created",
-        content: `Your investment opportunity "${validatedData.title}" has been successfully created and is now live for investors.`,
+        title: "Opportunity Submitted for Review",
+        content: `Your investment opportunity "${validatedData.title}" has been successfully submitted and is pending admin approval. You will be notified once it's reviewed.`,
         userId: session.user.id,
       },
     });

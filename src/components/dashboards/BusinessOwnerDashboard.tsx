@@ -33,10 +33,18 @@ import {
 interface Opportunity {
   id: string;
   title: string;
+  description: string;
+  detailedPlan: string;
   targetCapital: number;
-  currentRaised: number;
+  minimumInvestment: number;
+  expectedROI: number;
+  timeline: number;
+  industry: string;
+  riskLevel: string;
   status: string;
+  currentRaised: number;
   createdAt: string;
+  adminNotes?: string;
   _count: {
     investments: number;
   };
@@ -694,8 +702,212 @@ export default function BusinessOwnerDashboard({ user }: { user: any }) {
                 </div>
               )}
 
-              {/* Other existing tabs content would go here */}
-              {/* Opportunities Tab, Investment Management Tab, etc. */}
+              {/* Opportunities Tab */}
+              {activeTab === "opportunities" && (
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        My Opportunities
+                      </h2>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Manage your business opportunities and track investment
+                        progress
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      <PlusIcon className="h-5 w-5 mr-2" />
+                      Create New Opportunity
+                    </button>
+                  </div>
+
+                  {opportunities.length === 0 ? (
+                    <div className="text-center py-12 bg-white rounded-lg shadow">
+                      <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        No opportunities yet
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Get started by creating your first investment
+                        opportunity.
+                      </p>
+                      <div className="mt-6">
+                        <button
+                          onClick={() => setShowCreateModal(true)}
+                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                          <PlusIcon className="h-5 w-5 mr-2" />
+                          Create Opportunity
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-6">
+                      {opportunities.map((opportunity) => (
+                        <div
+                          key={opportunity.id}
+                          className="bg-white rounded-lg shadow overflow-hidden"
+                        >
+                          <div className="p-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-2">
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    {opportunity.title}
+                                  </h3>
+                                  <span
+                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                      opportunity.status === "APPROVED"
+                                        ? "bg-green-100 text-green-800"
+                                        : opportunity.status ===
+                                          "PENDING_REVIEW"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : opportunity.status ===
+                                          "NEEDS_REVISION"
+                                        ? "bg-orange-100 text-orange-800"
+                                        : opportunity.status === "REJECTED"
+                                        ? "bg-red-100 text-red-800"
+                                        : opportunity.status === "SUSPENDED"
+                                        ? "bg-purple-100 text-purple-800"
+                                        : "bg-gray-100 text-gray-800"
+                                    }`}
+                                  >
+                                    {opportunity.status.replace(/_/g, " ")}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600 mb-4">
+                                  {opportunity.description}
+                                </p>
+
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                  <div>
+                                    <p className="text-xs text-gray-500">
+                                      Target Capital
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                      {formatCurrency(
+                                        opportunity.targetCapital
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs text-gray-500">
+                                      Raised
+                                    </p>
+                                    <p className="text-sm font-semibold text-green-600">
+                                      {formatCurrency(
+                                        opportunity.currentRaised || 0
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs text-gray-500">
+                                      Investors
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                      {opportunity._count?.investments || 0}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs text-gray-500">
+                                      Industry
+                                    </p>
+                                    <p className="text-sm font-medium text-gray-700">
+                                      {opportunity.industry}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* Funding Progress Bar */}
+                                <div className="mb-4">
+                                  <div className="flex justify-between text-xs text-gray-600 mb-1">
+                                    <span>Funding Progress</span>
+                                    <span>
+                                      {formatPercentage(
+                                        ((opportunity.currentRaised || 0) /
+                                          opportunity.targetCapital) *
+                                          100
+                                      )}
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-2">
+                                    <div
+                                      className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                      style={{
+                                        width: `${Math.min(
+                                          ((opportunity.currentRaised || 0) /
+                                            opportunity.targetCapital) *
+                                            100,
+                                          100
+                                        )}%`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+
+                                {opportunity.adminNotes && (
+                                  <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                                    <p className="text-xs font-medium text-yellow-800 mb-1">
+                                      Admin Notes:
+                                    </p>
+                                    <p className="text-sm text-yellow-700">
+                                      {opportunity.adminNotes}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex space-x-3 mt-4 pt-4 border-t border-gray-200">
+                              <Link
+                                href={`/opportunities/${opportunity.id}`}
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                              >
+                                View Details
+                              </Link>
+
+                              {(opportunity.status === "PENDING_REVIEW" ||
+                                opportunity.status === "NEEDS_REVISION") && (
+                                <button className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                  Edit
+                                </button>
+                              )}
+
+                              {opportunity._count?.investments === 0 &&
+                                (opportunity.status === "PENDING_REVIEW" ||
+                                  opportunity.status === "NEEDS_REVISION" ||
+                                  opportunity.status === "REJECTED") && (
+                                  <button className="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    Delete
+                                  </button>
+                                )}
+
+                              {opportunity._count?.investments > 0 &&
+                                (opportunity.status === "APPROVED" ||
+                                  opportunity.status === "OPEN") && (
+                                  <button className="inline-flex items-center px-3 py-1.5 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-white hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                    Request Cancellation
+                                  </button>
+                                )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Investment Management Tab */}
+              {activeTab === "investments" && (
+                <InvestmentManagement userRole="BUSINESS_OWNER" />
+              )}
+
+              {/* Education Tab */}
               {activeTab === "education" && (
                 <EducationalContentLibrary userRole="BUSINESS_OWNER" />
               )}

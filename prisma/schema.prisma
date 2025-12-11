@@ -27,16 +27,28 @@ enum InvestmentStatus {
 
 // Investment opportunity status
 enum OpportunityStatus {
+  PENDING_REVIEW
+  NEEDS_REVISION
   OPEN
   CLOSED
   FULLY_FUNDED
   CANCELLED
+  REJECTED
+  SUSPENDED
 }
 
 // Message status
 enum MessageStatus {
   UNREAD
   READ
+}
+
+// Report status for compliance
+enum ReportStatus {
+  PENDING
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
 }
 
 // User account model
@@ -52,13 +64,27 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Admin management fields
+  suspended         Boolean   @default(false)
+  suspendedAt       DateTime?
+  suspensionReason  String?
+  bannedAt          DateTime?
+  banReason         String?
+  verificationNotes String?
+  lastLoginAt       DateTime?
+
   // Relations
-  investments         Investment[]
-  businesses          Business[]
-  sentMessages        Message[]           @relation("SentMessages")
-  receivedMessages    Message[]           @relation("ReceivedMessages")
-  notifications       Notification[]
-  withdrawalRequests  WithdrawalRequest[]
+  investments        Investment[]
+  businesses         Business[]
+  reviewedBusinesses Business[]          @relation("BusinessReviewer")
+  sentMessages       Message[]           @relation("SentMessages")
+  receivedMessages   Message[]           @relation("ReceivedMessages")
+  notifications      Notification[]
+  withdrawalRequests WithdrawalRequest[]
+  reportsMade        ReportedContent[]   @relation("Reporter")
+  reportsReviewed    ReportedContent[]   @relation("ReportReviewer")
+  adminAuditLogs     AdminAuditLog[]
+  platformSettings   PlatformSettings[]
 
   @@map("users")
 }
@@ -72,17 +98,27 @@ model Business {
   targetCapital     Float
   minimumInvestment Float
   expectedROI       Float
-  timeline          Int               // in months
+  timeline          Int // in months
   industry          String
   riskLevel         String
-  status            OpportunityStatus @default(OPEN)
+  status            OpportunityStatus @default(PENDING_REVIEW)
   currentRaised     Float             @default(0)
   ownerId           String
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
+  // Admin approval workflow fields
+  reviewedBy       String?
+  reviewedAt       DateTime?
+  rejectionReason  String?
+  adminNotes       String?
+  revisionRequests String?
+  isFeatured       Boolean   @default(false)
+  submittedAt      DateTime  @default(now())
+
   // Relations
   owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  reviewer    User?        @relation("BusinessReviewer", fields: [reviewedBy], references: [id])
   investments Investment[]
   reports     Report[]
 
@@ -123,12 +159,26 @@ model Return {
 
 // Withdrawal requests model
 model WithdrawalRequest {
-  id        String   @id @default(cuid())
-  amount    Float
-  status    String   @default("PENDING")
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  amount        Float
+  status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  userId        String
+  
+  // Bank details
+  bankName      String
+  accountNumber String
+  accountName   String
+  
+  // Admin review
+  approvedBy    String?
+  approvedAt    DateTime?
+  transactionId String?
+  adminNotes    String?
+  
+  // Timestamps
+  requestDate   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -180,4 +230,68 @@ model Report {
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@map("reports")
+}
+
+// Reported content for compliance monitoring
+model ReportedContent {
+  id           String       @id @default(cuid())
+  reportType   String // "USER_REPORT", "AUTOMATED_FLAG"
+  targetType   String // "BUSINESS", "USER", "INVESTMENT"
+  targetId     String
+  reportedById String? // Null for automated flags
+  reportReason String // "Fraud", "Inappropriate", "Suspicious Activity"
+  description  String
+  status       ReportStatus @default(PENDING)
+  priority     String       @default("MEDIUM") // "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  resolution   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  reportedBy User? @relation("Reporter", fields: [reportedById], references: [id])
+  reviewer   User? @relation("ReportReviewer", fields: [reviewedBy], references: [id])
+
+  @@index([status, priority])
+  @@index([targetType, targetId])
+  @@map("reported_content")
+}
+
+// Admin audit log for accountability
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String // "APPROVE_OPPORTUNITY", "SUSPEND_USER", etc.
+  targetType String // "BUSINESS", "USER", "WITHDRAWAL", etc.
+  targetId   String
+  details    String? // JSON string for flexible context
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  admin User @relation(fields: [adminId], references: [id])
+
+  @@index([adminId, createdAt])
+  @@index([targetType, targetId])
+  @@index([action, createdAt])
+  @@map("admin_audit_logs")
+}
+
+// Platform configuration settings
+model PlatformSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  dataType    String // "STRING", "NUMBER", "BOOLEAN", "JSON"
+  category    String // "INVESTMENT", "COMMISSION", "LIMITS", "FEATURES"
+  description String
+  updatedBy   String
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  updater User @relation(fields: [updatedBy], references: [id])
+
+  @@map("platform_settings")
 }
