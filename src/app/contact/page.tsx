@@ -11,6 +11,8 @@ import {
   ClockIcon,
 } from "@heroicons/react/24/outline";
 
+import { companyInfo } from "@/config/company";
+
 const contactSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -27,25 +29,25 @@ const contactInfo = [
     name: "Email",
     description: "Send us an email anytime",
     icon: EnvelopeIcon,
-    contact: "info@naijaconnectcapital.com",
+    contact: companyInfo.contact.email,
   },
   {
     name: "Phone",
     description: "Call us during business hours",
     icon: PhoneIcon,
-    contact: "+234 901 234 5678",
+    contact: companyInfo.contact.phone || "Coming soon",
   },
   {
     name: "Office",
     description: "Visit us at our headquarters",
     icon: MapPinIcon,
-    contact: "Lagos, Nigeria",
+    contact: `${companyInfo.address.street}, ${companyInfo.address.city}, ${companyInfo.address.country}`,
   },
   {
-    name: "Hours",
-    description: "Monday to Friday",
+    name: "Business Hours",
+    description: companyInfo.businessHours.days,
     icon: ClockIcon,
-    contact: "9:00 AM - 6:00 PM WAT",
+    contact: `${companyInfo.businessHours.hours} ${companyInfo.businessHours.timezone}`,
   },
 ];
 

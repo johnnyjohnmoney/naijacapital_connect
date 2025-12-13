@@ -4,52 +4,33 @@ import {
   GlobeAltIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
+import { teamMembers } from "@/config/team";
+import { companyMission, marketStats } from "@/config/company";
 
 const features = [
   {
-    name: "Security First",
+    name: "Security & Compliance",
     description:
-      "We employ bank-level security measures to protect your investments and personal information.",
+      "Bank-level security measures with SEC and CBN regulatory compliance framework to protect your investments and personal information.",
     icon: ShieldCheckIcon,
   },
   {
-    name: "Expert Team",
+    name: "Expert Founding Team",
     description:
-      "Our team combines financial expertise with deep knowledge of the Nigerian market.",
+      "Experienced founders across finance, technology, operations, and investment partnerships with deep Nigerian market knowledge.",
     icon: UserGroupIcon,
   },
   {
-    name: "Global Reach",
+    name: "Global Diaspora Reach",
     description:
-      "Connecting diaspora investors worldwide with opportunities in Nigeria.",
+      "Connecting 17 million Nigerians abroad with verified local investment opportunities in agriculture, real estate, and SMEs.",
     icon: GlobeAltIcon,
   },
   {
-    name: "Proven Results",
+    name: "Transparent Impact Tracking",
     description:
-      "Track record of successful investments and satisfied investors.",
+      "Real-time portfolio monitoring with ROI calculations and social impact metrics through our ImpactTrack Dashboard.",
     icon: ChartBarIcon,
-  },
-];
-
-const team = [
-  {
-    name: "Adebayo Ogundimu",
-    role: "Chief Executive Officer",
-    description: "15+ years in financial services and African markets",
-    image: "/api/placeholder/150/150",
-  },
-  {
-    name: "Kemi Adeleke",
-    role: "Chief Investment Officer",
-    description: "Former Goldman Sachs, expert in emerging markets",
-    image: "/api/placeholder/150/150",
-  },
-  {
-    name: "Chidi Okafor",
-    role: "Head of Risk Management",
-    description: "Risk assessment specialist with focus on African markets",
-    image: "/api/placeholder/150/150",
   },
 ];
 
@@ -63,8 +44,12 @@ export default function AboutPage() {
             About NaijaConnect Capital
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Bridging the gap between diaspora capital and Nigerian investment
-            opportunities through technology, expertise, and trust.
+            Transforming diaspora remittances into productive investments that
+            drive sustainable economic growth in Nigeria.
+          </p>
+          <p className="mt-4 text-sm text-gray-500">
+            NaijaConnect Capital Company Limited | Victoria Island, Lagos,
+            Nigeria
           </p>
         </div>
       </div>
@@ -77,14 +62,30 @@ export default function AboutPage() {
               Our Mission
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Empowering Economic Growth Through Strategic Investment
+              {companyMission.vision}
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              We believe that by connecting Nigerian diaspora investors with
-              carefully vetted local business opportunities, we can drive
-              sustainable economic growth while providing attractive returns to
-              our investors.
+              {companyMission.mission}
             </p>
+          </div>
+
+          {/* Core Values */}
+          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            <h3 className="text-2xl font-bold tracking-tight text-gray-900 text-center mb-12">
+              Our Core Values
+            </h3>
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-4 lg:gap-y-16">
+              {companyMission.values.map((value) => (
+                <div key={value.name} className="relative">
+                  <dt className="text-base font-semibold leading-7 text-gray-900 text-center">
+                    {value.name}
+                  </dt>
+                  <dd className="mt-2 text-base leading-7 text-gray-600 text-center">
+                    {value.description}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </div>
@@ -129,45 +130,52 @@ export default function AboutPage() {
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="text-center">
               <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Our Impact in Numbers
+                Market Opportunity
               </h2>
               <p className="mt-4 text-lg leading-8 text-green-100">
-                Since our launch, we've been making a significant impact in
-                connecting diaspora investments with Nigerian opportunities.
+                Tapping into Nigeria's massive diaspora remittance market to
+                drive productive investments.
               </p>
             </div>
             <dl className="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Total Investments
+                  Diaspora Remittances (2024)
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  ₦2.5B+
+                  ${marketStats.remittanceVolume.value}B
+                </dd>
+                <dd className="text-xs text-green-200 mt-1">
+                  {marketStats.remittanceVolume.source}
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Active Investors
+                  Nigerians Abroad
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  1,200+
+                  {marketStats.diasporaPopulation.value}M+
                 </dd>
+                <dd className="text-xs text-green-200 mt-1">Target market</dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Successful Projects
+                  Target Investors (3 years)
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  85+
+                  {marketStats.targetInvestors.value.toLocaleString()}
                 </dd>
+                <dd className="text-xs text-green-200 mt-1">Onboarding goal</dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Average ROI
+                  Investment Target (2028)
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  18%
+                  ₦{marketStats.targetInvestment.min}-
+                  {marketStats.targetInvestment.max}B
                 </dd>
+                <dd className="text-xs text-green-200 mt-1">Total inflows</dd>
               </div>
             </dl>
           </div>
@@ -182,36 +190,69 @@ export default function AboutPage() {
               Our Leadership
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Meet the Team Behind NaijaConnect Capital
+              Meet the Founding Team
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Our experienced leadership team brings together expertise in
-              finance, technology, and African markets.
+              Our experienced founding team brings together deep expertise in
+              finance, technology, operations, and investment partnerships.
             </p>
           </div>
           <ul
             role="list"
             className="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3"
           >
-            {team.map((person) => (
-              <li key={person.name}>
+            {teamMembers.map((person) => (
+              <li key={person.id}>
                 <div className="aspect-w-3 aspect-h-2">
-                  <div className="h-48 w-full bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-gray-500">Photo</span>
+                  <div className="h-64 w-full bg-gradient-to-br from-green-100 to-green-200 rounded-lg flex flex-col items-center justify-center p-6">
+                    <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-4">
+                      <span className="text-4xl font-bold text-green-600">
+                        {person.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </span>
+                    </div>
+                    <span className="text-sm text-green-700 font-medium">
+                      {person.role}
+                    </span>
                   </div>
                 </div>
                 <h3 className="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900">
                   {person.name}
                 </h3>
-                <p className="text-base leading-7 text-green-600">
-                  {person.role}
+                <p className="text-base leading-7 text-green-600 font-medium">
+                  {person.title}
                 </p>
                 <p className="mt-4 text-base leading-7 text-gray-600">
                   {person.description}
                 </p>
+                {person.expertise && person.expertise.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {person.expertise.slice(0, 3).map((skill) => (
+                      <span
+                        key={skill}
+                        className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
+
+          {/* Regulatory Notice */}
+          <div className="mx-auto mt-16 max-w-2xl rounded-lg bg-gray-50 p-6 text-center">
+            <p className="text-sm text-gray-600">
+              <strong>Company Status:</strong> NaijaConnect Capital Company
+              Limited is in the process of registration under the Companies and
+              Allied Matters Act (CAMA) 2020, with planned regulatory compliance
+              with the Securities and Exchange Commission (SEC) and Central Bank
+              of Nigeria (CBN).
+            </p>
+          </div>
         </div>
       </div>
     </div>

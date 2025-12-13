@@ -1,4 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NaijaConnect Capital
+
+**Official Website & Investment Platform**
+
+NaijaConnect Capital Company Limited is a digital financial technology (FinTech) company that transforms diaspora remittances into pre-vetted, high-impact investment opportunities in Nigeria. Our platform connects 17 million Nigerians abroad with verified local ventures in agriculture, real estate, SMEs, and infrastructure.
+
+## About NaijaConnect Capital
+
+- **Company Name:** NaijaConnect Capital Company Limited
+- **Location:** Victoria Island, Lagos, Nigeria
+- **Status:** Proposed registration under CAMA 2020
+- **Regulators:** Securities and Exchange Commission (SEC), Central Bank of Nigeria (CBN)
+- **Market:** USD 20.98 billion diaspora remittance market (World Bank, 2024)
+
+## Our Products
+
+### 1. RemitConnect
+Low-cost remittance gateway with **2.0% transaction fee** (below industry average of 4-6%). Direct transfers from diaspora to investment wallets with blockchain tracking.
+
+### 2. InvestDirect
+Digital marketplace of pre-vetted Nigerian investment opportunities. **2% annual management fee** charged monthly on assets under management.
+
+### 3. ImpactTrack Dashboard
+**Free** investment tracking tool with real-time ROI calculations, project updates, and social impact metrics.
+
+### 4. Diaspora Learning Hub
+Financial education portal with webinars, market reports, and advisory services at **₦5,000 per course**.
+
+## Founding Team
+
+- **Temitayo Sunmonu-Balogun** - Chief Executive Officer
+- **Emmanuel Orevba** - Chief Operating Officer
+- **Eric Ojeaga** - Chief Financial Officer
+- **Kevin Odiley** - Chief Technology Officer
+- **Kikelomo Abikele** - Head, Investment & Partnerships
+
+## Technology Stack
+
+This is a [Next.js](https://nextjs.org) project with the following stack:
 
 ## Getting Started
 

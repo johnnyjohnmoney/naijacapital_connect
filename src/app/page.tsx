@@ -1,52 +1,30 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  CheckIcon,
-  ArrowTrendingUpIcon,
-  ShieldCheckIcon,
-  GlobeAltIcon,
-} from "@heroicons/react/24/outline";
+import { products } from "@/config/products";
+import { marketStats } from "@/config/company";
 
 export const metadata: Metadata = {
-  title: "NaijaConnect Capital - Diaspora Investment Platform",
+  title:
+    "NaijaConnect Capital - Transform Diaspora Remittances into Nigerian Investments",
   description:
-    "Connect your capital with vetted Nigerian investment opportunities. Secure, transparent, and profitable investments for the diaspora community.",
+    "Turn your remittances into productive investments. Access pre-vetted Nigerian opportunities in agriculture, real estate, and SMEs. Low 2% fees, transparent tracking, SEC & CBN compliant.",
   keywords:
-    "Nigerian investments, diaspora, capital, investment platform, Nigeria, returns",
+    "Nigerian investments, diaspora remittances, NaijaConnect Capital, fintech Nigeria, RemitConnect, InvestDirect, diaspora investment platform, Nigerian SMEs, agriculture investment",
   openGraph: {
     title: "NaijaConnect Capital - Diaspora Investment Platform",
     description:
-      "Connect your capital with vetted Nigerian investment opportunities.",
+      "Transform USD 20.98 billion in diaspora remittances into productive Nigerian investments. Regulated, transparent, impactful.",
     type: "website",
   },
 };
 
-const features = [
-  {
-    name: "Secure Investment Platform",
-    description:
-      "Bank-level security with encrypted transactions and secure data storage for all your investments.",
-    icon: ShieldCheckIcon,
-  },
-  {
-    name: "Pre-vetted Opportunities",
-    description:
-      "All investment opportunities are thoroughly researched and vetted by our expert team.",
-    icon: CheckIcon,
-  },
-  {
-    name: "Competitive Returns",
-    description:
-      "Access high-yield investment opportunities with attractive returns and transparent fee structure.",
-    icon: ArrowTrendingUpIcon,
-  },
-  {
-    name: "Global Accessibility",
-    description:
-      "Invest from anywhere in the world with our user-friendly platform designed for the diaspora.",
-    icon: GlobeAltIcon,
-  },
-];
+// Use products from config, showing first 4 main products
+const features = products.map((product) => ({
+  name: product.name,
+  description: product.description,
+  icon: product.icon,
+  pricing: product.pricing,
+}));
 
 const testimonials = [
   {
@@ -97,10 +75,27 @@ const steps = [
 ];
 
 const stats = [
-  { id: 1, name: "Total Capital Raised", value: "₦2.5B+" },
-  { id: 2, name: "Active Investors", value: "1,200+" },
-  { id: 3, name: "Successful Projects", value: "85+" },
-  { id: 4, name: "Average ROI", value: "18%" },
+  {
+    id: 1,
+    name: "Diaspora Remittances (2024)",
+    value: `$${marketStats.remittanceVolume.value}B`,
+    source: marketStats.remittanceVolume.source,
+  },
+  {
+    id: 2,
+    name: "Nigerians Abroad",
+    value: `${marketStats.diasporaPopulation.value}M+`,
+  },
+  {
+    id: 3,
+    name: "Target Investors (3 years)",
+    value: `${marketStats.targetInvestors.value.toLocaleString()}`,
+  },
+  {
+    id: 4,
+    name: "Investment Target (2028)",
+    value: `₦${marketStats.targetInvestment.min}-${marketStats.targetInvestment.max}B`,
+  },
 ];
 
 export default function Home() {
@@ -123,12 +118,18 @@ export default function Home() {
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
           <div className="text-center">
             <h1 className="text-balance text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Connect Your Capital with Nigerian Opportunities
+              Transform Diaspora Remittances into Nigerian Investments
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              NaijaConnect Capital bridges the gap between diaspora investments
-              and vetted Nigerian business opportunities. Invest securely, earn
-              competitively, and contribute to Nigeria's economic growth.
+              NaijaConnect Capital connects{" "}
+              {marketStats.diasporaPopulation.value} million Nigerians abroad
+              with pre-vetted investment opportunities in agriculture, real
+              estate, and SMEs. Turn remittances into productive capital with
+              transparent tracking and competitive returns.
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              Tapping into ${marketStats.remittanceVolume.value}B annual
+              remittance market • SEC & CBN Regulated
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
@@ -186,15 +187,16 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-green-600">
-              Secure & Transparent
+              Our Products & Services
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why Choose NaijaConnect Capital?
+              Complete Platform for Diaspora Investment
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Our platform combines cutting-edge technology with deep market
-              expertise to provide diaspora investors with secure, profitable
-              investment opportunities in Nigeria.
+              From low-cost remittances to curated investments and real-time
+              tracking, NaijaConnect Capital offers an integrated solution for
+              transforming your remittances into productive Nigerian
+              investments.
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -212,6 +214,15 @@ export default function Home() {
                   </dt>
                   <dd className="mt-2 text-base leading-7 text-gray-600">
                     {feature.description}
+                  </dd>
+                  <dd className="mt-2 text-sm font-medium text-green-600">
+                    {feature.pricing.amount}
+                    {feature.pricing.period ? ` ${feature.pricing.period}` : ""}
+                    {feature.pricing.note && (
+                      <span className="text-xs text-gray-500 ml-2">
+                        ({feature.pricing.note})
+                      </span>
+                    )}
                   </dd>
                 </div>
               ))}
