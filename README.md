@@ -15,15 +15,19 @@ NaijaConnect Capital Company Limited is a digital financial technology (FinTech)
 ## Our Products
 
 ### 1. RemitConnect
+
 Low-cost remittance gateway with **2.0% transaction fee** (below industry average of 4-6%). Direct transfers from diaspora to investment wallets with blockchain tracking.
 
 ### 2. InvestDirect
+
 Digital marketplace of pre-vetted Nigerian investment opportunities. **2% annual management fee** charged monthly on assets under management.
 
 ### 3. ImpactTrack Dashboard
+
 **Free** investment tracking tool with real-time ROI calculations, project updates, and social impact metrics.
 
 ### 4. Diaspora Learning Hub
+
 Financial education portal with webinars, market reports, and advisory services at **₦5,000 per course**.
 
 ## Founding Team
@@ -37,6 +41,41 @@ Financial education portal with webinars, market reports, and advisory services 
 ## Technology Stack
 
 This is a [Next.js](https://nextjs.org) project with the following stack:
+
+## Technology Stack
+
+This is a [Next.js](https://nextjs.org) project with the following stack:
+
+- **Framework:** Next.js 15 with App Router
+- **Language:** TypeScript
+- **Database:** PostgreSQL with Prisma ORM
+- **Authentication:** NextAuth.js
+- **Styling:** Tailwind CSS
+- **UI Components:** Heroicons
+- **Forms:** React Hook Form with Zod validation
+- **Deployment:** Docker-ready with production configuration
+
+## Project Structure
+
+```
+src/
+├── app/              # Next.js app router pages
+├── components/       # React components
+├── config/           # Configuration files
+│   ├── company.ts    # Company information
+│   ├── team.ts       # Team member profiles
+│   └── products.ts   # Product/service definitions
+├── lib/              # Utility libraries
+└── types/            # TypeScript type definitions
+```
+
+## Configuration Files
+
+All company data is centralized in `src/config/` for easy maintenance:
+
+- **company.ts** - Company info, market stats, mission/vision
+- **team.ts** - Founding team profiles and expertise
+- **products.ts** - Product descriptions, pricing, features
 
 ## Getting Started
 
