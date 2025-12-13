@@ -27,25 +27,25 @@ const contactInfo = [
     name: "Email",
     description: "Send us an email anytime",
     icon: EnvelopeIcon,
-    contact: "info@naijaconnectcapital.com",
+    contact: "info@naijaconnect.com.ng",
   },
   {
     name: "Phone",
     description: "Call us during business hours",
     icon: PhoneIcon,
-    contact: "+234 901 234 5678",
+    contact: "+234 (0) 800-NAIJA-CAP",
   },
   {
     name: "Office",
     description: "Visit us at our headquarters",
     icon: MapPinIcon,
-    contact: "Lagos, Nigeria",
+    contact: "Victoria Island, Lagos, Nigeria",
   },
   {
     name: "Hours",
     description: "Monday to Friday",
     icon: ClockIcon,
-    contact: "9:00 AM - 6:00 PM WAT",
+    contact: "8:00 AM - 6:00 PM WAT (Support until 9:00 PM)",
   },
 ];
 

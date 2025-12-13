@@ -26,8 +26,9 @@ export default function Footer() {
         </div>
         <div className="mt-8 md:order-1 md:mt-0">
           <p className="text-center text-xs leading-5 text-gray-400 dark:text-gray-300">
-            &copy; 2024 NaijaConnect Capital. All rights reserved. Connecting
-            diaspora investments with Nigerian opportunities.
+            &copy; 2025 NaijaConnect Capital Company Limited. All rights
+            reserved. Transforming diaspora remittances into productive Nigerian
+            investments.
           </p>
         </div>
       </div>

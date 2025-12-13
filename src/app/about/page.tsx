@@ -3,52 +3,71 @@ import {
   UserGroupIcon,
   GlobeAltIcon,
   ChartBarIcon,
+  CurrencyDollarIcon,
+  DocumentChartBarIcon,
 } from "@heroicons/react/24/outline";
 
 const features = [
   {
-    name: "Security First",
+    name: "Low-Cost Remittance Gateway",
     description:
-      "We employ bank-level security measures to protect your investments and personal information.",
-    icon: ShieldCheckIcon,
+      "Transfer funds at just 2% transaction fee—significantly lower than the industry average of 4-6%. Smooth cross-border transfers with competitive exchange rates.",
+    icon: CurrencyDollarIcon,
   },
   {
-    name: "Expert Team",
+    name: "Curated Investment Marketplace",
     description:
-      "Our team combines financial expertise with deep knowledge of the Nigerian market.",
-    icon: UserGroupIcon,
-  },
-  {
-    name: "Global Reach",
-    description:
-      "Connecting diaspora investors worldwide with opportunities in Nigeria.",
-    icon: GlobeAltIcon,
-  },
-  {
-    name: "Proven Results",
-    description:
-      "Track record of successful investments and satisfied investors.",
+      "Access a digital dashboard of pre-vetted local ventures in real estate, agriculture, SMEs, and infrastructure projects.",
     icon: ChartBarIcon,
+  },
+  {
+    name: "Investment Monitoring & Impact Tracking",
+    description:
+      "Real-time data to monitor fund performance, social impact metrics, and return on investment through our ImpactTrack Dashboard.",
+    icon: DocumentChartBarIcon,
+  },
+  {
+    name: "Regulatory Compliance & Trust",
+    description:
+      "SEC-licensed and CBN-registered platform with thorough AML/CTF compliance, providing diaspora investors with a safe and reliable investment channel.",
+    icon: ShieldCheckIcon,
   },
 ];
 
 const team = [
   {
-    name: "Adebayo Ogundimu",
-    role: "Chief Executive Officer",
-    description: "15+ years in financial services and African markets",
+    name: "Temitayo Sunmonu-Balogun",
+    role: "Chief Executive Officer (CEO)",
+    description:
+      "A finance and management professional with over 10 years of experience in accounting, finance, and corporate leadership. Strong record of promoting growth, improving operations, and ensuring financial responsibility.",
     image: "/api/placeholder/150/150",
   },
   {
-    name: "Kemi Adeleke",
-    role: "Chief Investment Officer",
-    description: "Former Goldman Sachs, expert in emerging markets",
+    name: "Emmanuel Orevba",
+    role: "Chief Operating Officer (COO)",
+    description:
+      "A dedicated professional with skills in risk profiling, tax compliance, and audit management. Experienced in managing information systems, optimizing digital presence, and operational reporting.",
     image: "/api/placeholder/150/150",
   },
   {
-    name: "Chidi Okafor",
-    role: "Head of Risk Management",
-    description: "Risk assessment specialist with focus on African markets",
+    name: "Eric Ojeaga",
+    role: "Chief Financial Officer (CFO)",
+    description:
+      "A skilled finance professional with solid analytical and quantitative abilities in corporate finance, accounting, and investment management. Proficient in capital allocation and financial forecasting.",
+    image: "/api/placeholder/150/150",
+  },
+  {
+    name: "Kevin Odiley",
+    role: "Chief Technology Officer (CTO)",
+    description:
+      "Innovative and results-driven technology leader specializing in fintech solutions. Expert in full-stack development, API integration, cybersecurity, and blockchain-compatible scalable systems.",
+    image: "/api/placeholder/150/150",
+  },
+  {
+    name: "Kikelomo Abikele",
+    role: "Head, Investment & Partnerships",
+    description:
+      "Extensive experience in identifying impactful investment opportunities. Proven success in building stakeholder relationships, negotiating agreements, and driving strategic growth initiatives.",
     image: "/api/placeholder/150/150",
   },
 ];
@@ -63,8 +82,10 @@ export default function AboutPage() {
             About NaijaConnect Capital
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Bridging the gap between diaspora capital and Nigerian investment
-            opportunities through technology, expertise, and trust.
+            A digital fintech platform that channels diaspora remittances
+            directly into pre-vetted, high-impact investment opportunities in
+            Nigeria—transforming remittances from consumption into productive
+            capital.
           </p>
         </div>
       </div>
@@ -77,13 +98,16 @@ export default function AboutPage() {
               Our Mission
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Empowering Economic Growth Through Strategic Investment
+              Transforming Remittances Into Productive Capital
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              We believe that by connecting Nigerian diaspora investors with
-              carefully vetted local business opportunities, we can drive
-              sustainable economic growth while providing attractive returns to
-              our investors.
+              NaijaConnect Capital connects diaspora senders with the domestic
+              investment market, changing the way remittance inflows are
+              used—turning them from consumption into productive capital for
+              small businesses, real estate, agriculture, and infrastructure
+              projects. We provide transparency, thorough research, and
+              regulatory compliance to give Nigerians abroad a safe and reliable
+              way to invest in their home country.
             </p>
           </div>
         </div>
@@ -129,44 +153,45 @@ export default function AboutPage() {
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="text-center">
               <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Our Impact in Numbers
+                Our Growth Targets
               </h2>
               <p className="mt-4 text-lg leading-8 text-green-100">
-                Since our launch, we've been making a significant impact in
-                connecting diaspora investments with Nigerian opportunities.
+                Nigeria received USD 20.98 billion in diaspora remittances in
+                2024—nearly 6% of GDP. We're positioned to transform how these
+                funds create lasting impact.
               </p>
             </div>
             <dl className="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Total Investments
+                  Investment Target by 2028
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  ₦2.5B+
+                  ₦3-5B
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Active Investors
+                  Investor Target (3 Years)
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  1,200+
+                  10,000
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Successful Projects
+                  Transaction Fee
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  85+
+                  2%
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
                 <dt className="text-sm font-semibold leading-6 text-green-100">
-                  Average ROI
+                  Break-Even Target
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  18%
+                  24-30 mo
                 </dd>
               </div>
             </dl>
@@ -191,7 +216,7 @@ export default function AboutPage() {
           </div>
           <ul
             role="list"
-            className="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+            className="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-5"
           >
             {team.map((person) => (
               <li key={person.name}>

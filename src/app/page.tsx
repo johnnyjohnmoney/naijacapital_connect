@@ -10,62 +10,62 @@ import {
 export const metadata: Metadata = {
   title: "NaijaConnect Capital - Diaspora Investment Platform",
   description:
-    "Connect your capital with vetted Nigerian investment opportunities. Secure, transparent, and profitable investments for the diaspora community.",
+    "Transform your diaspora remittances into pre-vetted Nigerian investment opportunities. Low-cost transfers (2% vs 4-6% industry avg), curated marketplace, and real-time impact tracking.",
   keywords:
-    "Nigerian investments, diaspora, capital, investment platform, Nigeria, returns",
+    "Nigerian investments, diaspora, remittances, fintech, investment platform, Nigeria, real estate, agriculture, SME",
   openGraph: {
     title: "NaijaConnect Capital - Diaspora Investment Platform",
     description:
-      "Connect your capital with vetted Nigerian investment opportunities.",
+      "Transform diaspora remittances into productive capital. Invest in vetted Nigerian opportunities.",
     type: "website",
   },
 };
 
 const features = [
   {
-    name: "Secure Investment Platform",
+    name: "RemitConnect",
     description:
-      "Bank-level security with encrypted transactions and secure data storage for all your investments.",
-    icon: ShieldCheckIcon,
+      "Low-cost payment gateway for direct transfers from diaspora to investment wallets. Just 2% transaction fee—below the industry average of 4-6%.",
+    icon: GlobeAltIcon,
   },
   {
-    name: "Pre-vetted Opportunities",
+    name: "InvestDirect",
     description:
-      "All investment opportunities are thoroughly researched and vetted by our expert team.",
+      "Digital marketplace with access to screened investment projects in agriculture, real estate, and SMEs. 2% annual platform service fee.",
     icon: CheckIcon,
   },
   {
-    name: "Competitive Returns",
+    name: "ImpactTrack Dashboard",
     description:
-      "Access high-yield investment opportunities with attractive returns and transparent fee structure.",
+      "Investment tracking tool with project updates, ROI calculations, and social impact statistics. Free for all registered investors.",
     icon: ArrowTrendingUpIcon,
   },
   {
-    name: "Global Accessibility",
+    name: "Diaspora Learning Hub",
     description:
-      "Invest from anywhere in the world with our user-friendly platform designed for the diaspora.",
-    icon: GlobeAltIcon,
+      "Financial education portal with webinars, reports, and advisory services for informed investment decisions.",
+    icon: ShieldCheckIcon,
   },
 ];
 
 const testimonials = [
   {
     content:
-      "NaijaConnect made it so easy to invest back home. The returns have been fantastic!",
+      "NaijaConnect made it so easy to invest back home. The 2% transfer fee is unbeatable compared to other services!",
     author: "Adaora K.",
-    role: "Software Engineer, Canada",
+    role: "Software Engineer, United Kingdom",
   },
   {
     content:
-      "Finally, a platform I trust with my Nigerian investments. Transparent and secure.",
+      "Finally, a platform I trust with my Nigerian investments. The ImpactTrack dashboard shows me exactly where my money goes.",
     author: "Michael O.",
-    role: "Doctor, UK",
+    role: "Doctor, United States",
   },
   {
     content:
-      "The vetting process gives me confidence. Great ROI on my agri-business investment.",
+      "The vetting process gives me confidence. I've invested in agriculture and real estate projects through InvestDirect.",
     author: "Funmi A.",
-    role: "Business Analyst, USA",
+    role: "Business Analyst, Canada",
   },
 ];
 
@@ -97,10 +97,10 @@ const steps = [
 ];
 
 const stats = [
-  { id: 1, name: "Total Capital Raised", value: "₦2.5B+" },
-  { id: 2, name: "Active Investors", value: "1,200+" },
-  { id: 3, name: "Successful Projects", value: "85+" },
-  { id: 4, name: "Average ROI", value: "18%" },
+  { id: 1, name: "Remittance Market (2024)", value: "$20.98B" },
+  { id: 2, name: "Investor Target (3 Years)", value: "10,000" },
+  { id: 3, name: "Investment Target by 2028", value: "₦3-5B" },
+  { id: 4, name: "Transaction Fee", value: "2%" },
 ];
 
 export default function Home() {
@@ -123,12 +123,13 @@ export default function Home() {
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
           <div className="text-center">
             <h1 className="text-balance text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Connect Your Capital with Nigerian Opportunities
+              Transform Remittances Into Productive Nigerian Investments
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              NaijaConnect Capital bridges the gap between diaspora investments
-              and vetted Nigerian business opportunities. Invest securely, earn
-              competitively, and contribute to Nigeria's economic growth.
+              NaijaConnect Capital channels diaspora remittances directly into
+              pre-vetted investment opportunities in Nigeria. Low-cost
+              transfers, curated marketplace, and real-time impact
+              tracking—transforming consumption into capital growth.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
@@ -186,15 +187,15 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-green-600">
-              Secure & Transparent
+              Our Products & Services
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why Choose NaijaConnect Capital?
+              Four Pillars of Diaspora Investment
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Our platform combines cutting-edge technology with deep market
-              expertise to provide diaspora investors with secure, profitable
-              investment opportunities in Nigeria.
+              Our digital platform offers a complete ecosystem for diaspora
+              investment—from low-cost remittances to curated opportunities and
+              transparent impact tracking.
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -308,8 +309,9 @@ export default function Home() {
                   Is my investment secure?
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Yes, we use bank-level encryption and all opportunities are
-                  thoroughly vetted by our expert team.
+                  Yes, NaijaConnect is SEC-licensed and CBN-registered with full
+                  AML/CTF compliance. We use end-to-end encryption, multi-factor
+                  authentication, and regular security audits.
                 </dd>
               </div>
               <div className="pt-6">
@@ -317,17 +319,19 @@ export default function Home() {
                   What's the minimum investment amount?
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Our minimum investment starts from $100 USD or ₦50,000, making
-                  it accessible for diaspora investors.
+                  Most diaspora investors start with ₦500,000 to ₦5 million in
+                  their first year. Each opportunity has its own minimum
+                  threshold clearly displayed.
                 </dd>
               </div>
               <div className="pt-6">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
-                  How do I receive my returns?
+                  What are the fees?
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
-                  Returns are automatically transferred to your registered bank
-                  account or digital wallet quarterly.
+                  We charge a 2% transaction fee for transfers (vs 4-6% industry
+                  average) and a 2% annual platform service fee on invested
+                  capital. The ImpactTrack Dashboard is free.
                 </dd>
               </div>
               <div className="pt-6">
@@ -336,7 +340,8 @@ export default function Home() {
                 </dt>
                 <dd className="mt-2 text-base leading-7 text-gray-600">
                   Yes, our platform is specifically designed for diaspora
-                  investors and supports international payment methods.
+                  investors in the UK, USA, Canada, UAE, and worldwide. We
+                  support international payment methods and USD deposits.
                 </dd>
               </div>
             </dl>
