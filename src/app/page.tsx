@@ -98,9 +98,9 @@ const steps = [
 
 const stats = [
   { id: 1, name: "Remittance Market (2024)", value: "$20.98B" },
-  { id: 2, name: "Investor Target (3 Years)", value: "10,000" },
+  { id: 2, name: "Investors Target in year 3", value: "2,000" },
   { id: 3, name: "Investment Target by 2028", value: "₦3-5B" },
-  { id: 4, name: "Transaction Fee", value: "2%" },
+  { id: 4, name: "Management Fee", value: "2%" },
 ];
 
 export default function Home() {
