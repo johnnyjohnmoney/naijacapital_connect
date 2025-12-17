@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "NaijaConnect Capital - Diaspora Investment Platform",
   description:
     "Secure investment platform connecting Nigerian diaspora with pre-vetted investment opportunities in Nigeria",
+  icons: {
+    icon: "/NACC_logo.ico",
+    shortcut: "/NACC_logo.ico",
+    apple: "/NACC_logo.png",
+  },
 };
 
 export default function RootLayout({

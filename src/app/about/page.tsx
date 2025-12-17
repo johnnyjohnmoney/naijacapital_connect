@@ -43,10 +43,10 @@ const team = [
     image: "/api/placeholder/150/150",
   },
   {
-    name: "Emmanuel Orevba",
+    name: "Kevin Odiley",
     role: "Chief Operating Officer (COO)",
     description:
-      "A dedicated professional with skills in risk profiling, tax compliance, and audit management. Experienced in managing information systems, optimizing digital presence, and operational reporting.",
+      "A results-driven operations leader with strong commercial and growth expertise, experienced in scaling customer-centric services through data-driven strategies. Known for aligning people, processes, and platforms to drive revenue growth and deliver sustained value.",
     image: "/api/placeholder/150/150",
   },
   {
@@ -57,10 +57,10 @@ const team = [
     image: "/api/placeholder/150/150",
   },
   {
-    name: "Kevin Odiley",
+    name: "Emmanuel Orevba",
     role: "Chief Technology Officer (CTO)",
     description:
-      "Innovative and results-driven technology leader specializing in fintech solutions. Expert in full-stack development, API integration, cybersecurity, and blockchain-compatible scalable systems.",
+      "A strategic and execution-focused Chief Technology Officer with proven experience delivering secure, high-volume payment systems and digital banking solutions. Skilled in architecting scalable lending platforms and integrating APIs that support real-time transactions.",
     image: "/api/placeholder/150/150",
   },
   {
@@ -175,7 +175,7 @@ export default function AboutPage() {
                   Investor Target (3 Years)
                 </dt>
                 <dd className="order-first text-3xl font-semibold tracking-tight text-white">
-                  10,000
+                  2,000
                 </dd>
               </div>
               <div className="flex flex-col bg-white/5 p-8">
