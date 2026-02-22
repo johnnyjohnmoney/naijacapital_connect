@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   ShieldCheckIcon,
   UserGroupIcon,
@@ -40,35 +41,35 @@ const team = [
     role: "Chief Executive Officer (CEO)",
     description:
       "A finance and management professional with over 10 years of experience in accounting, finance, and corporate leadership. Strong record of promoting growth, improving operations, and ensuring financial responsibility.",
-    image: "/api/placeholder/150/150",
+    image: "/team/Temitayo.jpeg",
   },
   {
     name: "Kevin Odiley",
     role: "Chief Operating Officer (COO)",
     description:
       "A results-driven operations leader with strong commercial and growth expertise, experienced in scaling customer-centric services through data-driven strategies. Known for aligning people, processes, and platforms to drive revenue growth and deliver sustained value.",
-    image: "/api/placeholder/150/150",
+    image: "/team/Kevin.jpeg",
   },
   {
     name: "Eric Ojeaga",
     role: "Chief Financial Officer (CFO)",
     description:
       "A skilled finance professional with solid analytical and quantitative abilities in corporate finance, accounting, and investment management. Proficient in capital allocation and financial forecasting.",
-    image: "/api/placeholder/150/150",
+    image: "/team/Eric.png",
   },
   {
     name: "Emmanuel Orevba",
     role: "Chief Technology Officer (CTO)",
     description:
       "A strategic and execution-focused Chief Technology Officer with proven experience delivering secure, high-volume payment systems and digital banking solutions. Skilled in architecting scalable lending platforms and integrating APIs that support real-time transactions.",
-    image: "/api/placeholder/150/150",
+    image: "/team/Emmanuel.png",
   },
   {
     name: "Kikelomo Abikele",
     role: "Head, Investment & Partnerships",
     description:
       "Extensive experience in identifying impactful investment opportunities. Proven success in building stakeholder relationships, negotiating agreements, and driving strategic growth initiatives.",
-    image: "/api/placeholder/150/150",
+    image: "/team/Kiki.jpeg",
   },
 ];
 
@@ -220,10 +221,14 @@ export default function AboutPage() {
           >
             {team.map((person) => (
               <li key={person.name}>
-                <div className="aspect-w-3 aspect-h-2">
-                  <div className="h-48 w-full bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-gray-500">Photo</span>
-                  </div>
+                <div className="relative h-56 w-full overflow-hidden rounded-2xl">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                  />
                 </div>
                 <h3 className="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900">
                   {person.name}
